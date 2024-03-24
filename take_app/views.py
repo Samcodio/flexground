@@ -6,3 +6,6 @@ from django.shortcuts import render, redirect, reverse
 def home(request):
     context = {}
     return render(request, 'take_app/index.html', context)
+
+
+
