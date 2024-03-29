@@ -7,5 +7,3 @@ def home(request):
     context = {}
     return render(request, 'take_app/index.html', context)
 
-
-

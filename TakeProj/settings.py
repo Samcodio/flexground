@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'TakeProj',
+    'take_app',
     'user_login',
 ]
 
-# AUTH_USER_MODEL = 'take_app.CustomUser'
+AUTH_USER_MODEL = 'take_app.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
