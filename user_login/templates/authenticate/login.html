@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form action="" method="POST">
+ {% extends "TakeProj/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<form action="" method="POST" class="my-5">
     {% csrf_token %}
     <label for="username">Username: </label>
     <input type="text" id="username" name="username" placeholder="Michelle"><br><br>
@@ -15,5 +14,4 @@
 
     <input type="submit" value="Sign in">
 </form>
-</body>
-</html>
+ {% endblock content %}
