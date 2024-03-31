@@ -1,8 +1,10 @@
-from django.urls import path
-from . import views  # This imports the views from your views.py file
 
-app_name = 'take_app'  # This is fine to define here if you're using app-specific namespacing
+from django.urls import path, reverse
+from . import views
+
+
 
 urlpatterns = [
-    path('', views.home, name='home'),  # Connects the root URL of the app to the home view
+    path('', views.home, name='home'),
+    path('getnames/', views.get_names, name='get_names'),
 ]
