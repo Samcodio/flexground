@@ -5,7 +5,7 @@ from django.urls import reverse
 import openai
 import os
 
-api_key = "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"
+api_key = ""
 
 def home(request):
     # print(loader.get_template_dirs())  # Only needed if you're debugging template loading.

@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'take_app',
+'gitcard_exchange',
     'user_login',
     'TakeProj',
+
 ]
 
 AUTH_USER_MODEL = 'take_app.CustomUser'
