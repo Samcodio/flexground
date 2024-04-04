@@ -1,0 +1,30 @@
+{% extends "TakeProj/base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+{{message}}
+{% endfor %}
+{% endif %}
+<form action="" method="POST" class="my-5">
+    {% csrf_token %}
+    <label for="username">Username: </label>
+    <input type="text" id="username" name="username" placeholder="Michelle"><br><br>
+
+    <label for="password">Password: </label>
+    <input type="password" id="password" name="password" placeholder="Michelle"><br><br>
+
+    <input type="submit" value="Sign in">
+</form>
+ {% endblock content %}
+</body>
+</html>
