@@ -3,6 +3,8 @@ from django.urls import path, reverse
 from . import views
 
 
+app_name = 'take_app'
+
 
 urlpatterns = [
     path('', views.home, name='home'),
