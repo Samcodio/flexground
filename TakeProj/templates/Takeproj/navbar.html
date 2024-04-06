@@ -15,6 +15,12 @@
         <li><a href="#">Upgrade</a></li>
         <li><a href="#">Help</a></li>
         <li><a href="#">Explore</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'accounts:login' %}">Login</a></li>
+        {% endif %}
+        <li><a href="{% url 'accounts:registration' %}">Sign Up</a></li>
       </ul>
     </div>
     <div class="right">
