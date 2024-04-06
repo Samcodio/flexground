@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': 'name_sql',
         'USER': 'Nosikesamuel',
         'PASSWORD': 'Nosikesamuel',
-        'HOST': 'localhost',    
+        'HOST': 'localhost',
     }
 }
 

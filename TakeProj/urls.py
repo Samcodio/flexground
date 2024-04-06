@@ -25,5 +25,4 @@ urlpatterns = [
     path('exchange/', include('gitcard_exchange.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('reg_auth/', include('accounts.urls')),
-
 ]

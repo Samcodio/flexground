@@ -5,3 +5,4 @@ from .models import Person, Country
 admin.site.register(Country)
 admin.site.register(Person)
 
+
