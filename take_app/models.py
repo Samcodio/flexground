@@ -1,12 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 
 # Create your models here.
-
-
-class CustomUser(AbstractUser):
-    pass
 
 
 class Country(models.Model):
@@ -14,6 +9,7 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Person(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
