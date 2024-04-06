@@ -38,13 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'take_app',
-'gitcard_exchange',
-    'user_login',
+    'gitcard_exchange',
     'TakeProj',
-
+    'accounts',
+    'user_login',
 ]
-
-AUTH_USER_MODEL = 'take_app.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -90,10 +88,10 @@ WSGI_APPLICATION = 'TakeProj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'takeoff_sql2',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',    
+        'NAME': 'name_sql',
+        'USER': 'Nosikesamuel',
+        'PASSWORD': 'Nosikesamuel',
+        'HOST': 'localhost',
     }
 }
 
