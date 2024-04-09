@@ -96,9 +96,9 @@ WSGI_APPLICATION = 'TakeProj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'name_sql',
-        'USER': 'Nosikesamuel',
-        'PASSWORD': 'Nosikesamuel',
+        'NAME': 'takeoff_sql2',
+        'USER': 'root',
+        'PASSWORD': '',
         'HOST': 'localhost',
     }
 }
