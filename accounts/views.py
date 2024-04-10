@@ -15,11 +15,20 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+
+            # Determine the user's role (e.g., admin, moderator, or user)
+            if user.is_superuser:
+                # Admin user
+                request.session['role'] = 'Admin'
+            else:
+                # Normal user
+                request.session['role'] = 'User'
+
             return redirect('take_app:home')
         else:
             messages.error(request, 'Invalid details')
-    context = {
-    }
+
+    context = {}
     return render(request, 'authenticate/login.html', context)
 
 
@@ -29,17 +38,26 @@ def logout_user(request):
 
 
 def register(request):
-    form = RegistrationForm
+    form = RegistrationForm()  # Initialize form outside the if block
+
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+
+            # Determine the user's role (e.g., admin, moderator, or user)
+            if request.user.is_superuser:
+                # Admin user
+                request.session['role'] = 'Admin'
+            else:
+                # Normal user
+                request.session['role'] = 'User'
+
             return redirect('take_app:home')
         else:
-            form = RegistrationForm()
-            messages.error(request, 'Please Check your username and password')
+            messages.error(request, 'Please check your username and password')
+
     context = {
         'form': form
     }
     return render(request, "authenticate/registration.html", context)
-

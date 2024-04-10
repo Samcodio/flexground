@@ -1,0 +1,7 @@
+<!-- list_superusers.html -->
+{% for user in superusers %}
+    <div>
+        <p>{{ user.username }}</p>
+        <a href="{% url 'send_message' user.id %}">Send Message</a>
+    </div>
+{% endfor %}

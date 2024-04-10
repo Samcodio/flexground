@@ -1,0 +1,37 @@
+
+<!-- Section to display previous messages -->
+<h3>Previous Messages</h3>
+<ul>
+    {% for message in messages %}
+        <li>
+            <strong>From:</strong> {{ message.sender.username }}<br>
+            <strong>Date:</strong> {{ message.date }}<br>
+            <strong>{{ message.sender.username}}:</strong> {{ message.body }}<br>
+            {% if message.image %}
+                <img src="{{ message.image.url }}" alt="Image"><br>
+            {% endif %}
+            {% if message.video %}
+                <video src="{{ message.video.url }}" controls></video><br>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<!-- superuser.html -->
+<h2>Send Message to {{ superuser.username }}</h2>
+
+<!-- Form to send a new message -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="body">Message:</label>
+    <textarea name="body" id="body" required></textarea>
+
+    <label for="image">Image (optional):</label>
+    <input type="file" name="image" id="image" accept="image/*">
+
+    <label for="video">Video (optional):</label>
+    <input type="file" name="video" id="video" accept="video/*">
+
+    <button type="submit">Send Message</button>
+</form>
+
