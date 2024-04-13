@@ -1,0 +1,44 @@
+<!-- your_template.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post</title>
+</head>
+
+<body>
+
+    <h1>{{ blog_post.title }}</h1>
+    <p>Author: {{ blog_post.author }}</p>
+    <p>{{ blog_post.content }}</p>
+    <p>Created at: {{ blog_post.created_at|timesince }}</p>
+
+    <hr>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+        <li>
+            <p>{{ comment.text }}</p>
+            <p>Commented by: {{ comment.commenter }}</p>
+            <p>Commented at: {{ comment.created_at }}</p>
+        </li>
+        {% empty %}
+        <li>No comments yet.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Add a Comment</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+
+</html>

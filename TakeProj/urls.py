@@ -15,7 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.template.defaulttags import url
 from django.urls import path, include
+from django.views.static import serve
+
+from TakeProj import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +29,6 @@ urlpatterns = [
     path('exchange/', include('gitcard_exchange.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('reg_auth/', include('accounts.urls')),
+    path('reg_auth/', include('accounts.urls')),
+    path('blog/', include('blog.urls')),
 ]

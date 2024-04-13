@@ -8,8 +8,8 @@ class Message(models.Model):
     body = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='messages_images/', blank=True, null=True)
-    video = models.FileField(upload_to='messages_videos/', blank=True, null=True)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    video = models.FileField(upload_to='videos/', blank=True, null=True)
 
     class Meta:
         ordering = ['-date']

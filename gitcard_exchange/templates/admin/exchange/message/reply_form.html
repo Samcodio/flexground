@@ -1,0 +1,46 @@
+<!-- admin/exchange/message/reply_form.html -->
+
+{% extends 'admin/base_site.html' %}
+
+
+
+
+
+
+{% block content %}
+<br>
+<br>
+<br>
+<ul>
+  {% for message in messages %}
+  <li>
+
+    <strong>From:</strong> {{ message.sender.username }}<br>
+    <strong>Date:</strong> {{ message.date }}<br>
+    <strong>{{ message.sender.username}}:</strong> {{ message.body }}<br>
+    {% if message.image %}
+    <img src="{{ message.image.url }}" alt="Image"><br>
+    {% endif %}
+    {% if message.video %}
+    <video src="{{ message.video.url }}" controls></video><br>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+
+<br>
+<br><br><br><br><br>
+
+
+<div class="model-message">
+  <h1>Reply to Message</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Reply</button>
+
+  </form>
+  <p><a href="">Back to Message List</a></p>
+</div>
+{% endblock %}

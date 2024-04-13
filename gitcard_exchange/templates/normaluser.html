@@ -179,7 +179,7 @@
 
     <!-- Form to send a new message -->
 
-    <form method="post" enctype="multipart/form-data" action="{% url 'send_message' superuser_id=superuser.id %}">
+    <form method="post" enctype="multipart/form-data" action="{% url 'send_message_n' superuser_id=superuser.id %}">
         {% csrf_token %}
         <label for="body">Message:</label>
         <div> <textarea name="body" id="body" required class="form-control w-100"></textarea></div>

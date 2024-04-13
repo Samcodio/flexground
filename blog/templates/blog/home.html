@@ -1,0 +1,40 @@
+<!-- Your HTML remains unchanged -->
+<div>
+    {% for blogs in blog %}
+    <div>
+        <p>{{ blogs.title }}</p>
+        {{ blogs.author }}
+        <p>{{ blogs.content }}</p>
+        <p>
+            <button class="likeButton" data-post-id="{{ blogs.id }}">Likes</button>
+            {{ blogs.likes.count }}
+        </p>
+        <p>Posted: {{ blogs.created_at|timesince }} ago</p>
+        <p><a href="{% url 'comment' author=blogs.author pk=blogs.id %}">comment</a></p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    // Select all elements with class 'likeu1'
+    document.querySelectorAll('.likeButton').forEach(button => {
+        button.addEventListener('click', function () {
+            var postId = this.dataset.postId;
+            let url = '/blog/toggle_like/' + postId + '/';
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                    } else {
+                        this.innerText = data.liked ? 'Unlike' : 'Like';
+                        // Update like count for this specific post
+                        const likeCountElement = this.nextElementSibling;
+                        likeCountElement.innerText = data.like_count;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Template</title>
+    <style>
+        /* Basic styling for responsiveness */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .message {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .message img {
+            max-width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .message .content {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:last-child {
+            margin-right: 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    {% extends "TakeProj/base.html" %}
+    {% load static %}
+
+    {% block content %}
+    <div class="container">
+        <h3>Previous Messages</h3>
+        <ul>
+            {% for message in messages %}
+            <li class="message">
+                <img src="{{ message.sender.profile.picture.url }}" alt="User Avatar">
+                <div class="content">
+                    <strong>From:</strong> {{ message.sender.username }}<br>
+                    <strong>Date:</strong> {{ message.date }}<br>
+                    <strong>{{ message.sender.username }}:</strong> {{ message.body }}<br>
+                    {% if message.image %}
+                    <br>
+                    <img src="{{ message.image.url }}" alt="Image">
+                    {% endif %}
+                    {% if message.video %}
+                    <video src="{{ message.video.url }}" controls></video><br>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Form to send a new message -->
+        <h2>Send Message to {{ superuser.username }}</h2>
+        <form method="post" enctype="multipart/form-data" action="{% url 'send_message_n' superuser_id=superuser.id %}">
+            {% csrf_token %}
+            <label for="body">Message:</label>
+            <textarea name="body" id="body" required></textarea>
+            <label for="image">Image (optional):</label>
+            <input type="file" name="image" id="image" accept="image/*">
+            <label for="video">Video (optional):</label>
+            <input type="file" name="video" id="video" accept="video/*">
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+    {% endblock %}
+</body>
+
+</html>
