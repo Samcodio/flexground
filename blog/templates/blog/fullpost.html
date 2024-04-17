@@ -1,44 +1,317 @@
 <!-- your_template.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post</title>
+    <title>Message </title>
+    {% load static %}
+    <style>
+        /* Basic styling for responsiveness */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(0, 0, 0, ) !important;
+            backdrop-filter: blur(50px) !important;
+            color: white;
+        }
+
+        .text-red {
+            color: red;
+            font-weight: bolder;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, .5) !important;
+            backdrop-filter: blur(50px) !important;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .message {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .message img {
+            max-width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .message .content {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, .0) !important;
+            backdrop-filter: blur(50px) !important;
+            border-radius: 5px;
+            box-shadow: black 1px 0px 0px rgba(0, 0, 0, .3);
+            border: white 1px solid;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button,
+        input {
+            flex-grow: 1;
+            padding: 10px;
+
+
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            width: 100px;
+            backdrop-filter: blur(50px) !important;
+            border-radius: 5px;
+            box-shadow: black 1px 0px 0px rgba(0, 0, 0, .3);
+        }
+
+        input {
+            font-family: Arial, sans-serif;
+            /* Font style */
+            font-size: 16px;
+            /* Legible text size */
+            color: #333;
+            /* Darker text color for better readability */
+
+            /* Light grey background */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        button:last-child {
+            margin-right: 0;
+        }
+
+        button {
+            background-color: #0056b3;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .w-100 {
+            width: 100%;
+            backdrop-filter: blur(50px) !important;
+            border-radius: 5px;
+            box-shadow: black 1px 0px 0px rgba(0, 0, 0, .1);
+        }
+
+        .flex {
+            display: flex;
+            justify-content: center;
+
+        }
+
+        textarea:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .border {
+            border-radius: 70% 50%;
+        }
+
+        .flex-1 {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-weight: 900;
+        }
+
+        #goBack {
+            font-weight: bolder;
+            background-color: rgb(43, 200, 108);
+            color: white;
+            font-size: 11px;
+
+        }
+
+        a {
+
+            color: white;
+            text-decoration: none;
+            font-weight: bolder;
+        }
+
+        .linksB {
+            font-weight: bolder;
+            background-color: rgb(43, 200, 108);
+            color: white;
+            font-size: 11px;
+            font-weight: bolder;
+
+        }
+
+        #goBack:hover {
+            background-color: #0056b3;
+
+        }
+
+        .none {
+            display: none !important;
+        }
+    </style>
 </head>
 
-<body>
+<body style="background-image:url({% static 'images/img-09.jpg' %})" ;>
 
-    <h1>{{ blog_post.title }}</h1>
-    <p>Author: {{ blog_post.author }}</p>
-    <p>{{ blog_post.content }}</p>
-    <p>Created at: {{ blog_post.created_at|timesince }}</p>
 
-    <hr>
+    <div>
+        <h1 class="text-center">{{ blog_post.title }}</h1>
+        <p>Author: {{ blog_post.author }}</p>
+        <p> Since <small>{{ blog_post.created_at|timesince }} ago</small> </p>
+        <p class="text-center">{{ blog_post.content }}</p>
 
-    <h2>Comments</h2>
-    <ul>
-        {% for comment in comments %}
-        <li>
-            <p>{{ comment.text }}</p>
-            <p>Commented by: {{ comment.commenter }}</p>
-            <p>Commented at: {{ comment.created_at }}</p>
-        </li>
-        {% empty %}
-        <li>No comments yet.</li>
-        {% endfor %}
-    </ul>
 
-    <hr>
+        <hr>
+    </div>
 
-    <h2>Add a Comment</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ comment_form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+
+
+    <div>
+
+        {% if request.user == blog_post.author %}
+        <div class="d-flex">
+
+
+
+            {% if blog_post.comment_turn == 'True' %}
+            <button class="linksB"> <a href="#" id="turn-on-comment">Turn on comment</a></button>
+            <button class="linksB"><a href="#" id="turn-off-comment">Turn off comment</a></button>
+            {% else %}
+            <button class="linksB"> <a href="#" id="turn-on-comment">Turn on comment</a></button>
+            <button class="linksB"><a href="#" id="turn-off-comment">Turn off comment</a></button>
+            {% endif %}
+
+            {% else %}
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+    <div class="container" ">
+        <div class=" flex-1">
+        <div> <button id="goBack">&larr; Return</button> </div>
+        <div>
+            <h3>Comments</h3>
+        </div>
+    </div>
+    <div>
+
+
+        <div>
+
+
+            {% for comment in comments %}
+            <div class=" message">
+                <img src="{% static 'images/img-09.jpg' %}" alt="User Avatar" class="border">
+                <div class="content">
+                    <small> <strong>From:</strong> {{ comment.commenter }} {{ comment.created_at }}
+
+                        {% if request.user == comment.commenter or blog_post.author == request.user %}
+                        <a href="{% url 'delete_comment' comment.id blog_post.id%}">delete</a>
+                        <a href="">edit </a>
+                        {%else%}
+
+                        {%endif%}
+
+                        </<br>
+                    </small>
+                    <br>
+                    <b> {{ comment.text }} <br></b>
+
+                    {% if message.image %}
+                    <br>
+                    <img src="{{ message.image.url }}" alt="Image">
+                    {% endif %}
+                    {% if message.video %}
+                    <video src="{{ message.video.url }}" controls></video><br>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div>No comments yet.</div>
+            {% endfor %}
+            {% if blog_post.comment_turn == 'False' %}
+            {% if request.user == blog_post.author %}
+            <p class="text-center text-red">
+                You turn off Comment tap to turn it on
+                <a href="#" id="turn-on-comment">Turn
+                    on comment</a>
+                <button class="linksB none"><a href="#" id="turn-off-comment">Turn off comment</a></button>
+            </p>
+            {% else %}
+            <p class="text-center text-red">Comment has been turned off by the poster!!</p>
+            {% endif %}
+
+            {% else %}
+            <h2>Add a Comment</h2>
+            <form method="post" id="comment-form">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <script>
+        // Get the button element using its ID
+        var backButton = document.getElementById('goBack');
+
+        // Add an event listener for the 'click' event
+        backButton.addEventListener('click', function () {
+            window.history.back();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            document.getElementById('turn-off-comment').addEventListener('click', function () {
+                turnComment('False');
+            });
+
+            document.getElementById('turn-on-comment').addEventListener('click', function () {
+                turnComment('True');
+
+            });
+
+            function turnComment(value) {
+                let postId = '{{ blog_post.id }}';
+                let url = `/blog/turn_comment/${postId}/${value}/`;
+                console.log(postId, url);
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Reload the page to reflect the changes
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+    </script>
 </body>
 
 </html>

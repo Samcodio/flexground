@@ -2,12 +2,11 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .forms import BlogForm,CommentForm
 from .models import Blog,Comment
 from django.http import JsonResponse
-
+from django.contrib.auth.models import User
  
-
 # Create your views here.
 def home(request):
-    blog = Blog.objects.all().order_by('-created_at')
+    blog = Blog.objects.all().order_by('-likes','-comments')
 
     context  ={"blog":blog}
 
@@ -54,7 +53,10 @@ def comment(request,author, pk):
             # Assign the commenter to the comment
             comment.commenter = request.user  # Assuming users are logged in
             # Save the comment to the database
-            comment.save()
+            if blog_post.comment_turn == 'False':
+                return JsonResponse({'403 Error': 'comment has been turned off for  this post'})
+            else:
+                comment.save()
     else:
         # If it's not a POST request, create an empty comment form
         comment_form = CommentForm()
@@ -84,12 +86,15 @@ def create_post(request):
             # Save the blog post
             blog_instance = blog_form.save(commit=False)
             blog_instance.author = request.user  # Set the author to the current user
+            blog_instance.comment_turn = True # Set the comment turn to True or off for testing
             blog_instance.save()
 
             # Save the comment
             comment_instance = comment_form.save(commit=False)
             comment_instance.blog = blog_instance
-            comment_instance.commenter = request.user  # Set the commenter to the current user
+            comment_instance.commenter = request.user 
+
+        
             comment_instance.save()
             return redirect('home')  # Redirect to home page after successful post
     else:
@@ -97,3 +102,56 @@ def create_post(request):
         comment_form = CommentForm()
     context = {'blog_form': blog_form, 'comment_form': comment_form}
     return render(request, 'blog/create.html', context)
+
+
+
+def turn_comment(request, pk, value):
+   
+    blog_post = get_object_or_404(Blog, pk=pk)
+    
+    blog_post.comment_turn = value
+    blog_post.save()
+    return JsonResponse({'success': True})
+     
+
+
+def delete_comment(request, pk,ps ):
+    blog_post = get_object_or_404(Blog, pk=ps)
+
+    # Retrieve all comments associated with the blog post
+    comment = get_object_or_404(Comment, pk=pk)
+
+    if request.user == blog_post.author or request.user == comment.commenter:
+        comment.delete()
+        return JsonResponse({'success':'you deleted the comment'})
+    else:
+        return JsonResponse({'403':"you cannot delete this comment because you're not the author or the post owner"})
+     
+
+
+
+def profile(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    print(pk,user)
+    context = {'user': user}
+    return render(request,'blog/profile.html', context)
+
+
+
+def delete_post(request, pk):
+    blog = get_object_or_404(Blog, pk=pk)
+
+    # Retrieve all comments associated with the blog post
+
+    comments = Comment.objects.filter(blog=blog)
+
+    if request.user == blog.author: 
+        comments.delete()
+        blog.delete()
+        return JsonResponse({'success':'you deleted the Post'})
+    else:
+        return JsonResponse({'403':"you cannot delete this Post because you're not the author or the post owner"})
+
+
+
+ 

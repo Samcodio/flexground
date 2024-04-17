@@ -1,0 +1,6 @@
+<h1>{{ message.subject }}</h1>
+<p>From: {{ message.sender }}</p>
+<p>{{ message.body }}</p>
+{% if not message.read %}
+<p><a href="{% url 'reply_to_message' message.id %}">Reply</a></p>
+{% endif %}

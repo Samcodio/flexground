@@ -43,3 +43,18 @@ class Message(models.Model):
             })
 
         return users
+
+
+class Inbox(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='inbox')
+    messages = models.ManyToManyField(Message)
+
+    def get_unread_messages(self):
+        return self.messages.filter(is_read=False)
+
+    def get_latest_message(self):
+        return self.messages.latest('date')
+
+    def mark_all_as_read(self):
+        unread_messages = self.get_unread_messages()
+        unread_messages.update(is_read=True)

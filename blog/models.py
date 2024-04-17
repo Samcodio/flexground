@@ -8,6 +8,9 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name='liked_blogs', blank=True)
+    comment_turn = models.CharField(max_length=10)
+    
+    
 
     def __str__(self):
         return self.title

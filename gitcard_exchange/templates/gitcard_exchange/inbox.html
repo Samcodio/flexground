@@ -1,0 +1,20 @@
+<h1>Inbox</h1>
+<ul>
+    {% for user, message in users_latest_messages.items %}
+    {% if message in unread_messages %}
+    <a href="{% url 'send_message' user.id %}">reply</a>
+    <p>{{ user.id }} {{ message.body }} {{ user.username }} - {{
+        message.date
+        }} (Unread)</p>-
+    {% else %}
+    <a href="{% url 'send_message' user.id %}">
+        reply
+    </a>
+    <p>{{ message.date|timesince}}{{ user.id }} {{ message.body }} {{ user.username }} - {{
+        message.date
+        }} </p>- {{ user.username }} (seen)
+    {% endif %}
+    <li>
+    </li>
+    {% endfor %}
+</ul>

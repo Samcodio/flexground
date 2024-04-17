@@ -1,4 +1,13 @@
-<!-- Your HTML remains unchanged -->
+{% extends "TakeProj/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<a href="{% url 'create_post' %}">create post</a>
 <div>
     {% for blogs in blog %}
     <div>
@@ -6,17 +15,24 @@
         {{ blogs.author }}
         <p>{{ blogs.content }}</p>
         <p>
+
+            <a href="{% url 'profile'  blogs.author.id %}">{{blogs.author.id}}check</a>
             <button class="likeButton" data-post-id="{{ blogs.id }}">Likes</button>
             {{ blogs.likes.count }}
         </p>
         <p>Posted: {{ blogs.created_at|timesince }} ago</p>
         <p><a href="{% url 'comment' author=blogs.author pk=blogs.id %}">comment</a></p>
+        {% if request.user == blogs.author%}
+        <p><a href="{% url 'delete_post'  blogs.id  %}">delete</a></p>
+        {% else %}
+        <a href="">share Post</a>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
 
 <script>
-    // Select all elements with class 'likeu1'
+
     document.querySelectorAll('.likeButton').forEach(button => {
         button.addEventListener('click', function () {
             var postId = this.dataset.postId;
@@ -38,3 +54,7 @@
         });
     });
 </script>
+
+
+
+{% endblock %}

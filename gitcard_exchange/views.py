@@ -4,7 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Message
 from gitcard_exchange.arrays import detect as detects
-
+ 
+ 
+from django.db.models import Max
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ValidationError
@@ -106,3 +108,32 @@ def excangegiftcard(request):
 
     context = {}
     return render(request,'gitcard_exchange/index.html')
+
+
+
+
+
+ 
+@login_required
+def inbox(request):
+    # Get the latest message for each unique sender or recipient
+    inbox_messages = Message.objects.filter(Q(sender=request.user) | Q(recipient=request.user)).values('sender', 'recipient').annotate(latest_date=Max('date'))
+
+    # Query to get the complete message objects corresponding to the latest messages
+    latest_messages = Message.objects.filter(date__in=[msg['latest_date'] for msg in inbox_messages])
+    unread_messages = Message.objects.filter(recipient=request.user, is_read=False)
+
+    # Mark unread messages as read when rendering the inbox
+    for message in unread_messages:
+        message.is_read = True
+        message.save()
+    # Create a dictionary to store the latest message for each unique user
+    users_latest_messages = {}
+    for message in latest_messages:
+        other_user = message.sender if message.recipient == request.user else message.recipient
+        if other_user not in users_latest_messages:
+            users_latest_messages[other_user] = message
+
+    return render(request, 'gitcard_exchange/inbox.html', {'users_latest_messages': users_latest_messages,'unread_messages':unread_messages})
+
+ 
