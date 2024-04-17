@@ -31,4 +31,5 @@ urlpatterns = [
     path('reg_auth/', include('accounts.urls')),
     path('reg_auth/', include('accounts.urls')),
     path('blog/', include('blog.urls')),
+    path('group/', include('base.urls')),
 ]

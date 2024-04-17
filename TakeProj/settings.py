@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'gitcard_exchange',
     'TakeProj',
     'blog',
+    'base',
     'accounts',
     'user_login',
 ]
