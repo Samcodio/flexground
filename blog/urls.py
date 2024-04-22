@@ -13,5 +13,6 @@ path('turn_comment/<int:pk>/<str:value>/', views.turn_comment, name='comment_tur
 path('comment/<str:author>/<int:pk>/', views.comment, name='comment'),
 path('toggle_like/<int:pk>/', views.toggle_like, name='toggle_like'),
 path('profile/<int:pk>/', views.profile, name='profile'),
-
+path('share_to_home/', views.share_to_home, name='share_to_home'),
+path('blog/<int:blog_id>/share/', views.share_blog, name='share_blog'),
 ]

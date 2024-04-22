@@ -12,6 +12,7 @@
     {% for blogs in blog %}
     <div>
         <p>{{ blogs.title }}</p>
+        <p>This post has been shared {{ blogs.share_count }} times.</p>
         {{ blogs.author }}
         <p>{{ blogs.content }}</p>
         <p>
@@ -24,8 +25,20 @@
         <p><a href="{% url 'comment' author=blogs.author pk=blogs.id %}">comment</a></p>
         {% if request.user == blogs.author%}
         <p><a href="{% url 'delete_post'  blogs.id  %}">delete</a></p>
+        <!-- blog_detail.html -->
+        <form method="post" action="{% url 'share_blog' blogs.id %}">
+            {% csrf_token %}
+            <button type="submit">Share</button>
+        </form>
+
+
         {% else %}
-        <a href="">share Post</a>
+        <!-- blog_detail.html -->
+        <form method="post" action="{% url 'share_blog' blogs.id %}">
+            {% csrf_token %}
+            <button type="submit">Share</button>
+        </form>
+
         {% endif %}
     </div>
     {% endfor %}

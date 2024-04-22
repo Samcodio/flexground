@@ -25,7 +25,8 @@ class BlogMedia(models.Model):
     media_type = models.CharField(max_length=10, choices=[('image', 'Image'), ('video', 'Video')])
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-
+    def share_count(self):
+        return self.shares.count()
 
 
 class Comment(models.Model):

@@ -4,17 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Blog Posts and Shares</title>
 </head>
 
 <body>
-
-    {{user.username}}
-    {{user.id}}
-    <a href="{% url 'send_message' user.id %}">Message</a>
-
-
-
+    <h1>Posts and Shared Content</h1>
+    <ul>
+        {% for item in items %}
+        {% if item.item_type == "Post" %}
+        <li>
+            <strong>Title:</strong> {{ item.title }}<br>
+            <strong>Author:</strong> {{ item.author.username }}<br>
+            <strong>Published:</strong> {{ item.created_at|timesince }} ago<br>
+            <p>{{ item.content }}</p>
+            <!-- You might want to list likes or comments here -->
+            <div>Likes: {{ item.likes.count }}</div>
+            <div>Comments: {{ item.comments.count }}</div>
+        </li>
+        {% else %}
+        <li>
+            <strong>Shared by:</strong> {{ item.sharer.username }}<br>
+            <strong>Original Post:</strong> {{ item.blog.title }} by {{ item.blog.author.username }}<br>
+            <strong>Shared At:</strong> {{ item.shared_at|timesince }} ago<br>
+            <p>{{ item.blog.content }}</p>
+            <!-- Displaying the media of the shared post if any -->
+            {% for media in item.blog.media.all %}
+            <div>
+                {% if media.media_type == 'image' %}
+                <img src="{{ media.media_file.url }}" alt="Image">
+                {% elif media.media_type == 'video' %}
+                <video controls>
+                    <source src="{{ media.media_file.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
 </body>
 
 </html>

@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .forms import BlogForm,CommentForm
-from .models import Blog,Comment
+from .models import Blog,Comment, Share
 from django.http import JsonResponse
 from django.contrib.auth.models import User
- 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from itertools import chain
 # Create your views here.
 def home(request):
     blog = Blog.objects.all().order_by('-likes','-comments')
@@ -130,12 +132,39 @@ def delete_comment(request, pk,ps ):
 
 
 
+ 
+
 def profile(request, pk):
     user = get_object_or_404(User, pk=pk)
-    print(pk,user)
-    context = {'user': user}
-    return render(request,'blog/profile.html', context)
+    
+    # Fetch posts and annotate them
+ 
+    return render(request, 'blog/profile.html')
 
+
+
+def share_to_home(request ):
+    posts = Blog.objects.filter(author=user).prefetch_related('media')
+    for post in posts:
+        post.item_type = "Post"
+
+    # Fetch shares and annotate them
+    shares = Share.objects.filter(sharer=user).select_related('blog', 'blog__author')
+    for share in shares:
+        share.item_type = "Share"
+        # Assign created_at of the share to a common attribute used for sorting
+        share.sort_by_date = share.shared_at
+
+    # Sort combined list of posts and shares by created_at for posts and shared_at for shares
+    combined_list = sorted(
+        chain(posts, shares),
+        key=lambda x: x.created_at if hasattr(x, 'created_at') else x.sort_by_date,
+        reverse=True
+    )
+    print(combined_list.append(chain(posts, shares)))
+
+    context = {'user': user, 'items': combined_list}
+    return render(request,'blog/profile.html')
 
 
 def delete_post(request, pk):
@@ -151,6 +180,21 @@ def delete_post(request, pk):
         return JsonResponse({'success':'you deleted the Post'})
     else:
         return JsonResponse({'403':"you cannot delete this Post because you're not the author or the post owner"})
+
+
+
+
+
+
+
+ 
+def share_blog(request, blog_id):
+    blog = get_object_or_404(Blog, id=blog_id)
+    if request.method == 'POST':
+        Share.objects.create(blog=blog, sharer=request.user)
+        messages.success(request, "Successfully shared the blog!")
+        return redirect('share_to_home')  # Adjust the redirect as needed
+    return redirect('blog_list')  # If not a POST, redirect somewhere relevant
 
 
 
