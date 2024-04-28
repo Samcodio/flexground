@@ -1,12 +1,22 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .forms import BlogForm,CommentForm
-from .models import Blog,Comment, Share
+from .models import Blog,Comment, Share,Notification
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from itertools import chain
 # Create your views here.
+
+
+
+
+def notifications(request):
+    user = request.user
+    notifications = Notification.objects.filter(recipient=user)
+    return render(request, 'blog/notification.html', {'notifications': notifications})
+
+    
 def home(request):
     blog = Blog.objects.all().order_by('-likes','-comments')
 
@@ -136,35 +146,62 @@ def delete_comment(request, pk,ps ):
 
 def profile(request, pk):
     user = get_object_or_404(User, pk=pk)
+    user = request.user
     
-    # Fetch posts and annotate them
- 
-    return render(request, 'blog/profile.html')
-
-
-
-def share_to_home(request ):
+    # Fetch posts with preloaded media related objects
     posts = Blog.objects.filter(author=user).prefetch_related('media')
     for post in posts:
         post.item_type = "Post"
+        # Normalize date fields for sorting
+        post.sort_by_date = post.created_at
 
-    # Fetch shares and annotate them
+    # Fetch shares with optimized joins
     shares = Share.objects.filter(sharer=user).select_related('blog', 'blog__author')
     for share in shares:
         share.item_type = "Share"
-        # Assign created_at of the share to a common attribute used for sorting
         share.sort_by_date = share.shared_at
 
-    # Sort combined list of posts and shares by created_at for posts and shared_at for shares
+    # Combine and sort posts and shares by date
     combined_list = sorted(
         chain(posts, shares),
-        key=lambda x: x.created_at if hasattr(x, 'created_at') else x.sort_by_date,
+        key=lambda x: x.sort_by_date,
         reverse=True
     )
-    print(combined_list.append(chain(posts, shares)))
 
     context = {'user': user, 'items': combined_list}
-    return render(request,'blog/profile.html')
+
+ 
+    return render(request, 'blog/profile.html',context)
+
+
+ 
+def share_to_home(request):
+    # Assuming 'user' is fetched from request (adjust according to your authentication mechanism)
+    user = request.user
+    
+    # Fetch posts with preloaded media related objects
+    posts = Blog.objects.filter(author=user).prefetch_related('media')
+    for post in posts:
+        post.item_type = "Post"
+        # Normalize date fields for sorting
+        post.sort_by_date = post.created_at
+
+    # Fetch shares with optimized joins
+    shares = Share.objects.filter(sharer=user).select_related('blog', 'blog__author')
+    for share in shares:
+        share.item_type = "Share"
+        share.sort_by_date = share.shared_at
+
+    # Combine and sort posts and shares by date
+    combined_list = sorted(
+        chain(posts, shares),
+        key=lambda x: x.sort_by_date,
+        reverse=True
+    )
+
+    context = {'user': user, 'items': combined_list}
+    return render(request, 'blog/profile.html', context)
+
 
 
 def delete_post(request, pk):
@@ -192,8 +229,9 @@ def share_blog(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     if request.method == 'POST':
         Share.objects.create(blog=blog, sharer=request.user)
+        
         messages.success(request, "Successfully shared the blog!")
-        return redirect('share_to_home')  # Adjust the redirect as needed
+        return redirect('home')  # Adjust the redirect as needed
     return redirect('blog_list')  # If not a POST, redirect somewhere relevant
 
 
